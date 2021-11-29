@@ -268,11 +268,11 @@ def syncProgs():
         lastmod_json = str(data_json['last_mod'])
         
 
+    # print('lastmod_mqtt: ')
+    # print(lastmod_mqtt)
+    # print('lastmod_json: ')
+    # print(lastmod_json)
 
-    print('lastmod_mqtt: ')
-    print(lastmod_mqtt)
-    print('lastmod_json: ')
-    print(lastmod_json)
     ### compare MQTT <-> JSON
     element = datetime.strptime(lastmod_mqtt,"%d-%m-%Y %H:%M")
     timestamp_mqtt = datetime.timestamp(element)
@@ -292,6 +292,8 @@ def syncProgs():
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(newTdata, jsonFile, indent=4)
         print('aggiornato json')
+        
+        PrintGUI('prog')
 
     elif timestamp_json > timestamp_mqtt :
         #aggiorno mqtt
