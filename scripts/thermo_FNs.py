@@ -241,7 +241,6 @@ lastmod_json = ''
 ### MQTT
 def on_sync_connect(client, userdata, flags, rc):
     client.subscribe("brtt6/thermo")
-    print('connekted')
 def on_sync_message(client, userdata, msg):
     m_in=json.loads(msg.payload) #decode json data
     global data_mqtt
@@ -249,7 +248,6 @@ def on_sync_message(client, userdata, msg):
 
     data_mqtt = m_in
     lastmod_mqtt = m_in['last_mod']
-    print(m_in)
     client.disconnect()
     
 def syncProgs():

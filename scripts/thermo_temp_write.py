@@ -62,9 +62,4 @@ infotd.wait_for_publish()
 time.sleep(1)
 client.disconnect()
 
-PrintGUI('temp')
-
-# program lasts 5 minutes 
-# according to desired full refresh
-# interval set in crontab
-time.sleep(300) 
+time.sleep(5) 

@@ -39,10 +39,9 @@ from thermo_FNs import *
 # ...
 
 
-PrintGUI('main')
-set_interval(syncProgs, 60)
+set_interval(PrintGUI('main'), 60*10)
+set_interval(syncProgs, 60*1)
 
-# program lasts 10 minutes 
-# according to desired full refresh
-# interval set in crontab
-time.sleep(600) 
+
+from signal import pause
+pause()
