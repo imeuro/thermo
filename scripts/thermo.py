@@ -39,7 +39,7 @@ from thermo_FNs import *
 
 
 PrintGUI('main')
-set_interval(syncProgs, 60):
+set_interval(syncProgs, 60)
 
 # program lasts 10 minutes 
 # according to desired full refresh
