@@ -1,7 +1,9 @@
 import os
 import json
 import time
-from time import localtime, strftime, datetime
+from time import localtime, strftime
+from datetime import datetime
+
 os.environ['TZ'] = 'Europe/Rome'
 time.tzset()
 from gpiozero import Button
