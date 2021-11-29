@@ -31,10 +31,11 @@ import adafruit_bmp280
 from thermo_FNs import *
 
 # TODO:
-# - MQTT sync (vedere last_mod più recente tra mqtt e json e aggiornare set_temp & set_prog)
+# x buttons [done]
+# x MQTT sync [done]
 # - refresh (partial refresh)
 # - relay + final wiring
-#
+# - web gui
 # ...
 
 
