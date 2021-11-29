@@ -1,0 +1,9 @@
+{
+	"thermo": [
+		{
+			"current_temp": 20.8,
+			"set_temp": 20.5,
+			"set_prog": "T2"
+		}
+	]
+}

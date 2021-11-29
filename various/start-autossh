@@ -1,0 +1,16 @@
+#!/bin/bash
+createTunnel() {
+  sleep60 && 
+  autossh -o "ServerAliveInterval 30" -o "ServerAliveCountMax 10" -p20 -f -N -R 2222:localhost:22 pi@meuro.dev 
+  if [[ $? -eq 0 ]]; then
+    echo $?
+    echo Tunnel to piNAS created successfully
+  else
+    echo An error occurred creating a tunnel to piNas. RC was $?
+  fi
+}
+/bin/pidof autossh
+if [[ $? -ne 0 ]]; then
+  echo Creating new tunnel connection
+  createTunnel
+fi

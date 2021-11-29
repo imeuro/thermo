@@ -1,0 +1,94 @@
+# ---------------------------------------
+# ------------- BUTTONS -----------------
+# ---------------------------------------
+
+import os
+import json
+import time
+from time import localtime, strftime
+os.environ['TZ'] = 'Europe/Rome'
+time.tzset()
+from gpiozero import Button
+
+
+btn1 = Button(5)    # cycleModes: auto/t2/t3/man
+btn2 = Button(6)    # increase temp
+btn3 = Button(13)   # decrease temp
+btn4 = Button(19)   # fatality move!
+
+global datenow
+global timenow
+datenow = strftime("%d %b", localtime())
+timenow = strftime("%H:%M", localtime())
+
+basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+def cycleModes():
+    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+        data = json.load(thermodata)
+        curMode = data['thermo']['set_prog']
+        modeList = {
+            'AUTO':5,
+            'T1':17.5,
+            'T2':20.5,
+            'MAN':data['thermo']['set_temp']
+        }
+        #print(modeList[0])
+        key_list = list(modeList.keys())
+        val_list = list(modeList.values())
+        position = key_list.index(curMode)
+        if position < 3 :
+            newMode = key_list[position + 1]
+            newTemp = val_list[position + 1]
+        else :
+            newMode = key_list[0]
+            newTemp = val_list[0]
+
+        print(newMode)
+        print(newTemp)
+        data['thermo']['set_prog'] = newMode
+        data['thermo']['set_temp'] = newTemp
+        data['thermo']['last_mod'] = datenow + ' @ ' + timenow
+        
+    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+        json.dump(data, jsonFile, indent=4)
+
+
+def incTemp():
+    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+        data = json.load(thermodata)
+        newT = data['thermo']['set_temp']
+        newT = float(newT)
+        newT += 0.5
+        data['thermo']['set_temp'] = newT
+        data['thermo']['set_prog'] = 'MAN'
+        data['thermo']['last_mod'] = datenow + ' @ ' + timenow
+        print(data['thermo'])
+
+    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+        json.dump(data, jsonFile, indent=4)
+
+def decTemp():
+    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+        data = json.load(thermodata)
+        newT = data['thermo']['set_temp']
+        newT = float(newT)
+        newT -= 0.5
+        data['thermo']['set_temp'] = newT
+        data['thermo']['set_prog'] = 'MAN'
+        data['thermo']['last_mod'] = datenow + ' @ ' + timenow
+        print(data['thermo'])
+
+    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+        json.dump(data, jsonFile, indent=4)
+    
+def Reset():
+    printToDisplay("bum!")
+
+btn1.when_pressed = cycleModes
+btn1.when_pressed = incTemp
+btn1.when_pressed = decTemp
+btn1.when_pressed = Reset
+
+#cycleModes()

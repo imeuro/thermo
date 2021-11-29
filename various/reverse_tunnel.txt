@@ -1,0 +1,6 @@
+interessante
+  https://www.tunnelsup.com/raspberry-pi-phoning-home-using-a-reverse-remote-ssh-tunnel/
+ma in realtà ho usato
+  https://handyman.dulare.com/ssh-tunneling-with-autossh/
+
+# autossh -o "ServerAliveInterval 30" -o "ServerAliveCountMax 10" -p20 -f -N -R 2222:localhost:22 pi@meuro.dev
