@@ -1,3 +1,5 @@
+# this reads bmp280 sensor data and publish it to a json file and an mqtt chan
+
 import sys
 import os
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

@@ -1,3 +1,6 @@
+# reads data from json file before refreshing the gui
+# however, questionable... will review it later
+
 import sys
 import os
 import time
