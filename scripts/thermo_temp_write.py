@@ -47,7 +47,7 @@ Tdata = {
 with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
     json.dump(Tdata, jsonFile, indent=4)
 
-time.sleep(10)
+time.sleep(5)
 
 
 # ---------------------------------------
