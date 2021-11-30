@@ -58,4 +58,4 @@ except Exception as e:
 # ---------------- MQTT -----------------
 # ---------------------------------------
 
-publishToMQTT(Tdata,"brtt6/thermo")
+publishToMQTT(Tdata,"brtt6/temp")

@@ -160,6 +160,7 @@ def cycleModes():
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
     except Exception as e:
+        print('Cyclemodes:')
         print(e)
 
     publishToMQTT(data,"brtt6/thermo")
@@ -182,6 +183,7 @@ def incTemp():
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
     except Exception as e:
+        print('incTemp:')
         print(e)
 
     publishToMQTT(data,"brtt6/thermo")
@@ -204,6 +206,7 @@ def decTemp():
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
     except Exception as e:
+        print('decTemp')
         print(e)
  
     publishToMQTT(data,"brtt6/thermo")
@@ -221,6 +224,7 @@ def setAuto():
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
     except Exception as e:
+        print('setAuto:')
         print(e)
 
     publishToMQTT(data,"brtt6/thermo")
@@ -276,6 +280,7 @@ def syncProgs():
             data_json = json.load(thermodata)
             lastmod_json = str(data_json['last_mod'])
     except Exception as e:
+        print('syncProgs/read json:')
         print(e)
    
 
@@ -295,23 +300,25 @@ def syncProgs():
 
     if timestamp_json < timestamp_mqtt:
         #aggiorno json:
-        newTdata = {
+        print(data_mqtt)
+        newJSONdata = {
             "set_prog": data_mqtt['set_prog'],
             "set_temp": data_mqtt['set_temp'], 
             "last_mod": lastmod_mqtt
         }
         try:
             with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-                json.dump(newTdata, jsonFile, indent=4)
+                json.dump(newJSONdata, jsonFile, indent=4)
             print('aggiornato json')
         except Exception as e:
+            print('syncProgs/write json:')
             print(e)
 
         PrintGUI('prog')
 
     elif timestamp_json > timestamp_mqtt :
         #aggiorno mqtt
-        newTdata = {
+        newMQTTdata = {
             "set_prog": data_json['set_prog'],
             "set_temp": data_json['set_temp'], 
             "last_mod": lastmod_json
@@ -319,7 +326,7 @@ def syncProgs():
         client = mqtt.Client()
         client.connect("meuro.dev", 1883, 60)
         client.loop_start()
-        infotd = client.publish("brtt6/thermo", payload=json.dumps(newTdata), qos=1, retain=True)
+        infotd = client.publish("brtt6/thermo", payload=json.dumps(newMQTTdata), qos=1, retain=True)
         infotd.wait_for_publish()
         time.sleep(1)
         client.disconnect()
@@ -341,7 +348,7 @@ def set_interval(func, sec):
     return t
 
 
-def publishToMQTT(what,where="brtt6/thermo"):
+def publishToMQTT(what,where):
     time.sleep(3)
     client = mqtt.Client()
     client.connect("meuro.dev", 1883, 60)
