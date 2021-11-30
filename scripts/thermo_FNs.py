@@ -10,7 +10,7 @@ from gpiozero import Button
 import board
 import adafruit_bmp280
 
-import threading
+from threading import Event, Thread
 
 from waveshare_epd import rpi_epd2in7
 from PIL import Image,ImageDraw,ImageFont
@@ -25,9 +25,9 @@ basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 assetsdir = os.path.join(basedir, 'assets')
 
 
-# ---------------------------------------
-# ---------------- GUI ------------------
-# ---------------------------------------
+# --------------------------------------- #
+# ---------------- GUI ------------------ #
+# --------------------------------------- #
 
 def PrintGUI(caller):
 
@@ -120,9 +120,9 @@ def PrintGUI(caller):
     epd.sleep()
 
 
-# ---------------------------------------
-# ------------- BUTTONS -----------------
-# ---------------------------------------
+# --------------------------------------- #
+# ------------- BUTTONS ----------------- #
+# --------------------------------------- #
 
 btn1 = Button(5)    # cycleModes: auto/t2/t3/man
 btn2 = Button(6)    # increase temp
@@ -239,9 +239,9 @@ btn4.when_pressed = setAuto
 
 
 
-# ---------------------------------------
-# ---------- SYNC PROGRAMMING -----------
-# ---------------------------------------
+# --------------------------------------- #
+# ---------- SYNC PROGRAMMING ----------- #
+# --------------------------------------- #
 
 # ogni tot leggi mqtt e vedi data['last_mod'].
 # se più recente di data['last_mod'] in json, allora sovrascrivi
@@ -292,15 +292,14 @@ def syncProgs():
     ### compare MQTT <-> JSON
     element = datetime.strptime(lastmod_mqtt,"%d-%m-%Y %H:%M")
     timestamp_mqtt = datetime.timestamp(element)
-    print(timestamp_mqtt)
+    # print(timestamp_mqtt)
 
     element = datetime.strptime(lastmod_json,"%d-%m-%Y %H:%M")
     timestamp_json = datetime.timestamp(element)
-    print(timestamp_json)
+    # print(timestamp_json)
 
     if timestamp_json < timestamp_mqtt:
-        #aggiorno json:
-        print(data_mqtt)
+        ### aggiorno json:
         newJSONdata = {
             "set_prog": data_mqtt['set_prog'],
             "set_temp": data_mqtt['set_temp'], 
@@ -317,7 +316,7 @@ def syncProgs():
         PrintGUI('prog')
 
     elif timestamp_json > timestamp_mqtt :
-        #aggiorno mqtt
+        ### aggiorno mqtt
         newMQTTdata = {
             "set_prog": data_json['set_prog'],
             "set_temp": data_json['set_temp'], 
@@ -335,17 +334,17 @@ def syncProgs():
     else :
         print('burp! già fatto boss.')
 
-# ---------------------------------------
-# --------------- OUTILS ----------------
-# ---------------------------------------
+# --------------------------------------- #
+# --------------- OUTILS ---------------- #
+# --------------------------------------- #
 
-def set_interval(func, sec):
-    def func_wrapper():
-        set_interval(func, sec) 
-        func()  
-    t = threading.Timer(sec, func_wrapper)
-    t.start()
-    return t
+def call_repeatedly(interval, func, *args):
+    stopped = Event()
+    def loop():
+        while not stopped.wait(interval): # the first call is in `interval` secs
+            func(*args)
+    Thread(target=loop).start()    
+    return stopped.set
 
 
 def publishToMQTT(what,where):

@@ -30,6 +30,8 @@ import adafruit_bmp280
 
 from thermo_FNs import *
 
+from threading import Event, Thread
+
 # TODO:
 # x buttons [done]
 # x MQTT sync [done]
@@ -38,9 +40,9 @@ from thermo_FNs import *
 # - web gui
 # ...
 
-
-set_interval(PrintGUI('main'), 60*10)
-set_interval(syncProgs, 60*1)
+PrintGUI('main')
+call_repeatedly(600,PrintGUI,'main')
+call_repeatedly(60, syncProgs)
 
 
 from signal import pause
