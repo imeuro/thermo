@@ -20,13 +20,10 @@ import paho.mqtt.client as mqtt
 global tempNow
 global setTemp
 global setProg
-global datenow
 
-datenow = time.strftime("%d-%m-%Y %H:%M")
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 assetsdir = os.path.join(basedir, 'assets')
 
-print(datenow)
 
 # ---------------------------------------
 # ---------------- GUI ------------------
@@ -158,7 +155,7 @@ def cycleModes():
             print(newTemp)
             data['set_prog'] = newMode
             data['set_temp'] = newTemp
-            data['last_mod'] = datenow
+            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
             
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
@@ -179,7 +176,7 @@ def incTemp():
                 newT += 0.5
             data['set_temp'] = newT
             data['set_prog'] = 'MAN'
-            data['last_mod'] = datenow
+            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
             print(data)
 
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
@@ -201,7 +198,7 @@ def decTemp():
                 newT -= 0.5
             data['set_temp'] = newT
             data['set_prog'] = 'MAN'
-            data['last_mod'] = datenow
+            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
             print(data)
 
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
@@ -219,7 +216,7 @@ def setAuto():
             data = json.load(thermodata)
             data['set_prog'] = 'AUTO'
             data['set_temp'] = 5
-            data['last_mod'] = datenow
+            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
             
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
