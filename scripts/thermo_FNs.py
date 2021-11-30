@@ -133,89 +133,100 @@ btn3 = Button(13)   # decrease temp
 btn4 = Button(19)   # straight to AUTO!
 
 def cycleModes():
-    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-        data = json.load(thermodata)
-        curMode = data['set_prog']
-        modeList = {
-            'AUTO':5,
-            'T1':17.5,
-            'T2':20.5,
-            'MAN':data['set_temp']
-        }
-        #print(modeList[0])
-        key_list = list(modeList.keys())
-        val_list = list(modeList.values())
-        position = key_list.index(curMode)
-        if position < 3 :
-            newMode = key_list[position + 1]
-            newTemp = val_list[position + 1]
-        else :
-            newMode = key_list[0]
-            newTemp = val_list[0]
+    try:
+        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+            data = json.load(thermodata)
+            curMode = data['set_prog']
+            modeList = {
+                'AUTO':5,
+                'T1':17.5,
+                'T2':20.5,
+                'MAN':data['set_temp']
+            }
+            #print(modeList[0])
+            key_list = list(modeList.keys())
+            val_list = list(modeList.values())
+            position = key_list.index(curMode)
+            if position < 3 :
+                newMode = key_list[position + 1]
+                newTemp = val_list[position + 1]
+            else :
+                newMode = key_list[0]
+                newTemp = val_list[0]
 
-        print(newMode)
-        print(newTemp)
-        data['set_prog'] = newMode
-        data['set_temp'] = newTemp
-        data['last_mod'] = datenow
-        
-    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-        json.dump(data, jsonFile, indent=4)
+            print(newMode)
+            print(newTemp)
+            data['set_prog'] = newMode
+            data['set_temp'] = newTemp
+            data['last_mod'] = datenow
+            
+        with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+            json.dump(data, jsonFile, indent=4)
+    except Exception as e:
+        print(e)
 
-    publishToMQTT(data)
+    publishToMQTT(data,"brtt6/thermo")
 
     PrintGUI('prog')
 
 def incTemp():
-    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-        data = json.load(thermodata)
-        newT = data['set_temp']
-        newT = float(newT)
-        if newT < 30.5 :
-            newT += 0.5
-        data['set_temp'] = newT
-        data['set_prog'] = 'MAN'
-        data['last_mod'] = datenow
-        print(data)
+    try:
+        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+            data = json.load(thermodata)
+            newT = data['set_temp']
+            newT = float(newT)
+            if newT < 30.5 :
+                newT += 0.5
+            data['set_temp'] = newT
+            data['set_prog'] = 'MAN'
+            data['last_mod'] = datenow
+            print(data)
 
-    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-        json.dump(data, jsonFile, indent=4)
+        with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+            json.dump(data, jsonFile, indent=4)
+    except Exception as e:
+        print(e)
 
-    publishToMQTT(data)
+    publishToMQTT(data,"brtt6/thermo")
 
     PrintGUI('prog')
 
 def decTemp():
-    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-        data = json.load(thermodata)
-        newT = data['set_temp']
-        newT = float(newT)
-        if newT > 5 :
-            newT -= 0.5
-        data['set_temp'] = newT
-        data['set_prog'] = 'MAN'
-        data['last_mod'] = datenow
-        print(data)
+    try:
+        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+            data = json.load(thermodata)
+            newT = data['set_temp']
+            newT = float(newT)
+            if newT > 5 :
+                newT -= 0.5
+            data['set_temp'] = newT
+            data['set_prog'] = 'MAN'
+            data['last_mod'] = datenow
+            print(data)
 
-    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-        json.dump(data, jsonFile, indent=4)
+        with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+            json.dump(data, jsonFile, indent=4)
+    except Exception as e:
+        print(e)
  
-    publishToMQTT(data)
+    publishToMQTT(data,"brtt6/thermo")
 
     PrintGUI('prog')
    
 def setAuto():
-    print("setAuto")
-    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-        data = json.load(thermodata)
-        data['set_prog'] = 'AUTO'
-        data['set_temp'] = 5
-        data['last_mod'] = datenow
-        
-    with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-        json.dump(data, jsonFile, indent=4)
+    try:
+        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+            data = json.load(thermodata)
+            data['set_prog'] = 'AUTO'
+            data['set_temp'] = 5
+            data['last_mod'] = datenow
+            
+        with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+            json.dump(data, jsonFile, indent=4)
+    except Exception as e:
+        print(e)
 
-    publishToMQTT(data)
+    publishToMQTT(data,"brtt6/thermo")
 
     PrintGUI('prog')
 
@@ -263,10 +274,13 @@ def syncProgs():
     client.loop_forever()  # Start networking daemon
 
     ### JSON
-    with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-        data_json = json.load(thermodata)
-        lastmod_json = str(data_json['last_mod'])
-        
+    try:
+        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+            data_json = json.load(thermodata)
+            lastmod_json = str(data_json['last_mod'])
+    except Exception as e:
+        print(e)
+   
 
     # print('lastmod_mqtt: ')
     # print(lastmod_mqtt)
@@ -289,10 +303,13 @@ def syncProgs():
             "set_temp": data_mqtt['set_temp'], 
             "last_mod": lastmod_mqtt
         }
-        with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
-            json.dump(newTdata, jsonFile, indent=4)
-        print('aggiornato json')
-        
+        try:
+            with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
+                json.dump(newTdata, jsonFile, indent=4)
+            print('aggiornato json')
+        except Exception as e:
+            print(e)
+
         PrintGUI('prog')
 
     elif timestamp_json > timestamp_mqtt :
@@ -327,12 +344,12 @@ def set_interval(func, sec):
     return t
 
 
-def publishToMQTT(what):
+def publishToMQTT(what,where="brtt6/thermo"):
     time.sleep(3)
     client = mqtt.Client()
     client.connect("meuro.dev", 1883, 60)
     client.loop_start()
-    infotd = client.publish("brtt6/thermo", payload=json.dumps(what), qos=1, retain=True)
+    infotd = client.publish(where, payload=json.dumps(what), qos=1, retain=True)
     infotd.wait_for_publish()
     time.sleep(1)
     client.disconnect()

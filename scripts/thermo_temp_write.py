@@ -45,23 +45,17 @@ Tdata = {
     "cur_temp": round(bmp280.temperature + calibration, 1), 
     "last_mod": time.strftime("%d-%m-%Y %H:%M")
 }
+try:
+    with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
+        json.dump(Tdata, jsonFile, indent=4)
 
-with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
-    json.dump(Tdata, jsonFile, indent=4)
-
-time.sleep(5)
+    time.sleep(5)
+except Exception as e:
+    print(e)
 
 
 # ---------------------------------------
 # ---------------- MQTT -----------------
 # ---------------------------------------
 
-client = mqtt.Client()
-client.connect("meuro.dev", 1883, 60)
-client.loop_start()
-infotd = client.publish("brtt6/temp", payload=json.dumps(Tdata), qos=1, retain=True)
-infotd.wait_for_publish()
-time.sleep(1)
-client.disconnect()
-
-time.sleep(5) 
+publishToMQTT(Tdata,"brtt6/thermo")
