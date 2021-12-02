@@ -35,14 +35,29 @@ from threading import Event, Thread
 # TODO:
 # x buttons [done]
 # x MQTT sync [done]
-# - refresh (partial refresh)
-# - relay + final wiring
-# - web gui
+# x refresh [done]
+# - relay
+# - final wiring
+# - web gui (connect to MQTT)
+# - partial screen refresh
 # ...
 
 PrintGUI('main')
-call_repeatedly(600,PrintGUI,'main')
+call_repeatedly(600,PrintGUI,'main_repeatedly')
+call_repeatedly(300, manageHeater)
 call_repeatedly(60, syncProgs)
+
+
+
+btn1 = Button(5)    # cycleModes: auto/t2/t3/man
+btn2 = Button(6)    # increase temp
+btn3 = Button(13)   # decrease temp
+btn4 = Button(19)   # straight to AUTO!
+
+btn1.when_pressed = cycleModes
+btn2.when_pressed = incTemp
+btn3.when_pressed = decTemp
+btn4.when_pressed = setAuto
 
 
 from signal import pause

@@ -10,6 +10,8 @@ from gpiozero import Button
 import board
 import adafruit_bmp280
 
+import RPi.GPIO as GPIO
+
 from threading import Event, Thread
 
 from waveshare_epd import rpi_epd2in7
@@ -57,7 +59,8 @@ def PrintGUI(caller):
 
     Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(Himage)
-
+    if caller == 'main_repeatedly':
+        print('----------------------> main_repeatedly')
     #if caller == 'main':
     if caller != 'null':
         print('[GUI] init...')
@@ -117,17 +120,12 @@ def PrintGUI(caller):
     #     #epd.smart_update(Himage)
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 
 # --------------------------------------- #
 # ------------- BUTTONS ----------------- #
 # --------------------------------------- #
-
-btn1 = Button(5)    # cycleModes: auto/t2/t3/man
-btn2 = Button(6)    # increase temp
-btn3 = Button(13)   # decrease temp
-btn4 = Button(19)   # straight to AUTO!
 
 def cycleModes():
     try:
@@ -231,13 +229,6 @@ def setAuto():
 
     PrintGUI('prog')
 
-btn1.when_pressed = cycleModes
-btn2.when_pressed = incTemp
-btn3.when_pressed = decTemp
-btn4.when_pressed = setAuto
-
-
-
 
 # --------------------------------------- #
 # ---------- SYNC PROGRAMMING ----------- #
@@ -332,7 +323,37 @@ def syncProgs():
         print('aggiornato mqtt')
 
     else :
-        print('burp! già fatto boss.')
+        print('no updates.')
+
+# --------------------------------------- #
+# --------------- Relay ---------------- #
+# --------------------------------------- #
+
+def manageHeater():
+    try:
+
+        in1 = 16
+
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(in1, GPIO.OUT)
+        GPIO.output(in1, False)
+
+        from thermo_read import returnData
+        d=returnData()
+
+        print('current temp: '+str(d.tempNow))
+        print('desired temp:'+str(d.setTemp))
+
+        if (d.tempNow < d.setTemp):
+            GPIO.output(in1, True)
+            print('better switch heating on.')
+        else:
+            GPIO.output(in1, False)
+            print('that\'s ok i can turn off now')
+
+    except KeyboardInterrupt:
+        GPIO.cleanup()
+
 
 # --------------------------------------- #
 # --------------- OUTILS ---------------- #
