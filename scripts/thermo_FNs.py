@@ -336,7 +336,6 @@ def manageHeater():
 
         #GPIO.setmode(GPIO.BOARD)
         GPIO.setup(in1, GPIO.OUT)
-        GPIO.output(in1, False)
 
         from thermo_read import returnData
         d=returnData()
@@ -345,10 +344,10 @@ def manageHeater():
         print('desired temp:'+str(d.setTemp))
 
         if (d.tempNow < d.setTemp):
-            GPIO.output(in1, True)
+            GPIO.output(in1, False)
             print('better switch heating on.')
         else:
-            GPIO.output(in1, False)
+            GPIO.output(in1, True)
             print('that\'s ok i can turn off now')
 
     except KeyboardInterrupt:
