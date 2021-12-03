@@ -44,7 +44,7 @@ from threading import Event, Thread
 
 PrintGUI('main')
 call_repeatedly(600,PrintGUI,'main_repeatedly')
-call_repeatedly(300, manageHeater)
+call_repeatedly(10, manageHeater)
 call_repeatedly(60, syncProgs)
 
 
