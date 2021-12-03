@@ -31,7 +31,7 @@ humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 calibratedTEMP = round(temperature + calibration, 1)
 
 print("\nTemperature: %0.1f C" % calibratedTEMP)
-print("\nHumidity: %0.1f %" % humidity)
+print("\nHumidity: " +  str(humidity) + " %")
 
 time.sleep(3)
 
