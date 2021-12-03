@@ -332,9 +332,9 @@ def syncProgs():
 def manageHeater():
     try:
 
-        in1 = 16
+        in1 = 23
 
-        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setmode(GPIO.BOARD)
         GPIO.setup(in1, GPIO.OUT)
         GPIO.output(in1, False)
 
