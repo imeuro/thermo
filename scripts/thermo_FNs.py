@@ -72,15 +72,15 @@ def PrintGUI(caller):
         # ---------------------------------------
 
         draw.rectangle((0, 30, epd.width, 242), fill= 0)
-        draw.text((5, 45), 'TEMP:', font = fontXS, fill = 1)
-        draw.text((5, 45), str(d.tempNow).split('.')[0], font = fontTempInt, fill = 1)
-        draw.text((tempoffset, 58), 'o', font = fontXS, fill = 1)
-        draw.text((tempoffset+10, 58), 'C', font = fontTempUnit, fill = 1)
-        draw.text((tempoffset, 80),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+        draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
+        draw.text((5, 50), str(d.tempNow).split('.')[0], font = fontTempInt, fill = 1)
+        draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
+        draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
+        draw.text((tempoffset, 85),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
 
-        draw.text((5, 135), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 142), str(d.humiNow).split('.')[0], font = fontTempDec, fill = 1)
-        draw.text((humioffset+10, 155), '%', font = fontTempUnit, fill = 1)
+        draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
+        draw.text((5, 152), str(d.humiNow).split('.')[0], font = fontTempDec, fill = 1)
+        draw.text((humioffset+10, 167), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
