@@ -29,7 +29,7 @@ calibration = -1.5
 
 humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
-calibratedTEMP = round(bmp280.temperature + calibration, 1)
+calibratedTEMP = round(temperature + calibration, 1)
 print("\nTemperature: %0.1f C" % calibratedTEMP)
 
 time.sleep(1)
