@@ -10,7 +10,7 @@ if os.path.exists(libdir):
 
 import time
 import board
-from gpiozero import Button
+#from gpiozero import Button
 import Adafruit_DHT
 import paho.mqtt.client as mqtt
 import json
@@ -28,11 +28,12 @@ DHT_PIN = 4
 calibration = -1.5
 
 humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
-
 calibratedTEMP = round(temperature + calibration, 1)
-print("\nTemperature: %0.1f C" % calibratedTEMP)
 
-time.sleep(1)
+print("\nTemperature: %0.1f C" % calibratedTEMP)
+print("\nHumidity: %0.1f %" % humidity)
+
+time.sleep(3)
 
 # ---------------------------------------
 # ---------------- JSON -----------------
@@ -47,7 +48,7 @@ try:
     with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
         json.dump(Tdata, jsonFile, indent=4)
 
-    time.sleep(5)
+    time.sleep(3)
 except Exception as e:
     print(e)
 

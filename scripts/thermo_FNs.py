@@ -8,8 +8,7 @@ os.environ['TZ'] = 'Europe/Rome'
 time.tzset()
 from gpiozero import Button
 import board
-import adafruit_bmp280
-
+import Adafruit_DHT
 import RPi.GPIO as GPIO
 
 from threading import Event, Thread
@@ -120,7 +119,7 @@ def PrintGUI(caller):
     #     #epd.smart_update(Himage)
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
 
 # --------------------------------------- #
