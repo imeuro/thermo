@@ -52,6 +52,7 @@ def PrintGUI(caller):
     timeW,timeH = fontM.getsize(timenow)
     timeX = (epd.width) - timeW - 5
     bigtemp = str(d.tempNow).split('.')[0]
+    bighumi = str(d.humiNow).split('.')[0]
 
     tempW,tempH = fontTempInt.getsize(bigtemp)
     tempoffset = 5+tempW
