@@ -55,6 +55,8 @@ def PrintGUI(caller):
 
     tempW,tempH = fontTempInt.getsize(bigtemp)
     tempoffset = 5+tempW
+    humiW,humiH = fontTempInt.getsize(bighumi)
+    humioffset = 5+humiW
 
     Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(Himage)
@@ -74,6 +76,10 @@ def PrintGUI(caller):
         draw.text((tempoffset, 58), 'o', font = fontXS, fill = 1)
         draw.text((tempoffset+10, 58), 'C', font = fontTempUnit, fill = 1)
         draw.text((tempoffset, 80),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+
+        draw.text((5, 95), 'Humidity:', font = fontXS, fill = 1)
+        draw.text((5, 95), str(d.humiNow).split('.')[0], font = fontTempInt, fill = 1)
+        draw.text((humioffset+10, 108), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
@@ -343,11 +349,14 @@ def manageHeater():
         print('desired temp:'+str(d.setTemp))
 
         if (d.tempNow < d.setTemp):
+            #print('better switch heating on.')
             GPIO.output(in1, False)
-            print('better switch heating on.')
+            # todo: make "fire" icon appear in gui
+            
         else:
+            #print('that\'s ok i can turn off now')
             GPIO.output(in1, True)
-            print('that\'s ok i can turn off now')
+            # todo: make "fire" icon disappear in gui
 
     except KeyboardInterrupt:
         GPIO.cleanup()
