@@ -32,7 +32,7 @@ calibratedTEMP = round(temperature + calibration, 1)
 calibratedHUMI = round(humidity)
 
 print("\nTemperature: %0.1f C" % calibratedTEMP)
-print("\nHumidity: %0.1f %" % calibratedHUMI)
+print("\nHumidity: %0.1f " % calibratedHUMI +"%")
 
 time.sleep(3)
 
