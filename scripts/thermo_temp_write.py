@@ -11,7 +11,7 @@ if os.path.exists(libdir):
 import time
 import board
 from gpiozero import Button
-import adafruit_bmp280
+import Adafruit_DHT
 import paho.mqtt.client as mqtt
 import json
 
@@ -22,15 +22,12 @@ from thermo_FNs import *
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-# Create sensor object, communicating over the board's default I2C bus
-i2c = board.I2C()
-bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
-
-bmp280.sea_level_pressure = 1013.25
-
+DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_PIN = 4
 
 calibration = -1.5
 
+humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 
 calibratedTEMP = round(bmp280.temperature + calibration, 1)
 print("\nTemperature: %0.1f C" % calibratedTEMP)
@@ -42,7 +39,8 @@ time.sleep(1)
 # ---------------------------------------
 
 Tdata = {
-    "cur_temp": round(bmp280.temperature + calibration, 1), 
+    "cur_temp": round(temperature + calibration, 1), 
+    "cur_humi": round(humidity), 
     "last_mod": time.strftime("%d-%m-%Y %H:%M")
 }
 try:
