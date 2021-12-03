@@ -56,7 +56,7 @@ def PrintGUI(caller):
 
     tempW,tempH = fontTempInt.getsize(bigtemp)
     tempoffset = 5+tempW
-    humiW,humiH = fontTempInt.getsize(bighumi)
+    humiW,humiH = fontTempDec.getsize(bighumi)
     humioffset = 5+humiW
 
     Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
@@ -79,8 +79,8 @@ def PrintGUI(caller):
         draw.text((tempoffset, 80),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
 
         draw.text((5, 135), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 135), str(d.humiNow).split('.')[0], font = fontTempDec, fill = 1)
-        draw.text((humioffset+10, 148), '%', font = fontTempUnit, fill = 1)
+        draw.text((5, 142), str(d.humiNow).split('.')[0], font = fontTempDec, fill = 1)
+        draw.text((humioffset+10, 155), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
