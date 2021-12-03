@@ -79,8 +79,8 @@ def PrintGUI(caller):
         draw.text((tempoffset, 85),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
 
         draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 152), str(d.humiNow).split('.')[0], font = fontTempDec, fill = 1)
-        draw.text((humioffset+10, 167), '%', font = fontTempUnit, fill = 1)
+        draw.text((5, 155), str(d.humiNow), font = fontTempDec, fill = 1)
+        draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
