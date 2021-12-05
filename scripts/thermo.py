@@ -26,8 +26,7 @@ import traceback
 
 from gpiozero import Button
 import board
-import adafruit_bmp280
-
+import Adafruit_DHT
 from thermo_FNs import *
 
 from threading import Event, Thread
@@ -36,17 +35,17 @@ from threading import Event, Thread
 # x buttons [done]
 # x MQTT sync [done]
 # x refresh [done]
-# - relay
+# x relay [done]
 # - final wiring
 # - web gui (connect to MQTT)
 # - partial screen refresh
 # ...
 
+
 PrintGUI('main')
 call_repeatedly(600,PrintGUI,'main_repeatedly')
 call_repeatedly(300, manageHeater)
 call_repeatedly(60, syncProgs)
-
 
 
 btn1 = Button(5)    # cycleModes: auto/t2/t3/man

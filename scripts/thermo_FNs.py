@@ -8,8 +8,7 @@ os.environ['TZ'] = 'Europe/Rome'
 time.tzset()
 from gpiozero import Button
 import board
-import adafruit_bmp280
-
+import Adafruit_DHT
 import RPi.GPIO as GPIO
 
 from threading import Event, Thread
@@ -53,9 +52,12 @@ def PrintGUI(caller):
     timeW,timeH = fontM.getsize(timenow)
     timeX = (epd.width) - timeW - 5
     bigtemp = str(d.tempNow).split('.')[0]
+    bighumi = str(d.humiNow).split('.')[0]
 
     tempW,tempH = fontTempInt.getsize(bigtemp)
     tempoffset = 5+tempW
+    humiW,humiH = fontTempDec.getsize(bighumi)
+    humioffset = 5+humiW
 
     Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
     draw = ImageDraw.Draw(Himage)
@@ -70,11 +72,15 @@ def PrintGUI(caller):
         # ---------------------------------------
 
         draw.rectangle((0, 30, epd.width, 242), fill= 0)
-        draw.text((5, 45), 'TEMP:', font = fontXS, fill = 1)
-        draw.text((5, 45), str(d.tempNow).split('.')[0], font = fontTempInt, fill = 1)
-        draw.text((tempoffset, 58), 'o', font = fontXS, fill = 1)
-        draw.text((tempoffset+10, 58), 'C', font = fontTempUnit, fill = 1)
-        draw.text((tempoffset, 80),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+        draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
+        draw.text((5, 50), str(d.tempNow).split('.')[0], font = fontTempInt, fill = 1)
+        draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
+        draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
+        draw.text((tempoffset, 85),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+
+        draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
+        draw.text((5, 155), str(d.humiNow), font = fontTempDec, fill = 1)
+        draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
@@ -120,7 +126,7 @@ def PrintGUI(caller):
     #     #epd.smart_update(Himage)
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
 
 # --------------------------------------- #
@@ -331,11 +337,10 @@ def syncProgs():
 def manageHeater():
     try:
 
-        in1 = 16
+        in1 = 23
 
-        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setmode(GPIO.BOARD)
         GPIO.setup(in1, GPIO.OUT)
-        GPIO.output(in1, False)
 
         from thermo_read import returnData
         d=returnData()
@@ -344,11 +349,14 @@ def manageHeater():
         print('desired temp:'+str(d.setTemp))
 
         if (d.tempNow < d.setTemp):
-            GPIO.output(in1, True)
-            print('better switch heating on.')
-        else:
+            #print('better switch heating on.')
             GPIO.output(in1, False)
-            print('that\'s ok i can turn off now')
+            # todo: make "fire" icon appear in gui
+            
+        else:
+            #print('that\'s ok i can turn off now')
+            GPIO.output(in1, True)
+            # todo: make "fire" icon disappear in gui
 
     except KeyboardInterrupt:
         GPIO.cleanup()

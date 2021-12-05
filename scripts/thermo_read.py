@@ -20,6 +20,7 @@ class updatedData:
             with open(os.path.join(basedir, 'temp.json'), 'r') as tempdata:
                 Tdata = json.load(tempdata)
                 updated.tempNow = Tdata['cur_temp']
+                updated.humiNow = Tdata['cur_humi']
                 print(Tdata)
         except Exception as e:
             print(e)

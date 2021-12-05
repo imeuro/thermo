@@ -10,8 +10,8 @@ if os.path.exists(libdir):
 
 import time
 import board
-#from gpiozero import Button
-import Adafruit_DHT
+from gpiozero import Button
+import adafruit_bmp280
 import paho.mqtt.client as mqtt
 import json
 
@@ -22,34 +22,34 @@ from thermo_FNs import *
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-DHT_SENSOR = Adafruit_DHT.DHT22
-DHT_PIN = 4
+# Create sensor object, communicating over the board's default I2C bus
+i2c = board.I2C()
+bmp280 = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
+
+bmp280.sea_level_pressure = 1013.25
+
 
 calibration = -1.5
 
-humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
-calibratedTEMP = round(temperature + calibration, 1)
-calibratedHUMI = round(humidity)
 
+calibratedTEMP = round(bmp280.temperature + calibration, 1)
 print("\nTemperature: %0.1f C" % calibratedTEMP)
-print("\nHumidity: %0.1f " % calibratedHUMI +"%")
 
-time.sleep(3)
+time.sleep(1)
 
 # ---------------------------------------
 # ---------------- JSON -----------------
 # ---------------------------------------
 
 Tdata = {
-    "cur_temp": calibratedTEMP, 
-    "cur_humi": calibratedHUMI, 
+    "cur_temp": round(bmp280.temperature + calibration, 1), 
     "last_mod": time.strftime("%d-%m-%Y %H:%M")
 }
 try:
     with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
         json.dump(Tdata, jsonFile, indent=4)
 
-    time.sleep(3)
+    time.sleep(5)
 except Exception as e:
     print(e)
 
