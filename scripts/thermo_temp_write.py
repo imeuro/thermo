@@ -22,40 +22,58 @@ from thermo_FNs import *
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-DHT_SENSOR = Adafruit_DHT.DHT22
-DHT_PIN = 4
+class readDHT22Data:
+    def __init__(upd):
+        DHT_SENSOR = Adafruit_DHT.DHT22
+        DHT_PIN = 4
 
-calibration = -1.5
+        calibration = -1.5
+        #calibration = 0
 
-humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
-calibratedTEMP = round(temperature + calibration, 1)
-calibratedHUMI = round(humidity)
+        humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
+        upd.tempNow = round(temperature + calibration, 1)
+        upd.humiNow = round(humidity)
 
-print("\nTemperature: %0.1f C" % calibratedTEMP)
-print("\nHumidity: %0.1f " % calibratedHUMI +"%")
+        print("\nTemperature: %0.1f C" % upd.tempNow)
+        print("\nHumidity: %0.1f " % upd.humiNow +"%")
 
-time.sleep(3)
+        time.sleep(3)
 
-# ---------------------------------------
-# ---------------- JSON -----------------
-# ---------------------------------------
+        # ---------------------------------------
+        # ---------------- JSON -----------------
+        # ---------------------------------------
 
-Tdata = {
-    "cur_temp": calibratedTEMP, 
-    "cur_humi": calibratedHUMI, 
-    "last_mod": time.strftime("%d-%m-%Y %H:%M")
-}
-try:
-    with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
-        json.dump(Tdata, jsonFile, indent=4)
+        Tdata = {
+            "cur_temp": upd.tempNow, 
+            "cur_humi": upd.humiNow, 
+            "last_mod": time.strftime("%d-%m-%Y %H:%M")
+        }
+        try:
+            with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
+                json.dump(Tdata, jsonFile, indent=4)
 
-    time.sleep(3)
-except Exception as e:
-    print(e)
+            time.sleep(3)
+        except Exception as e:
+            print(e)
+
+        try:
+            with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+                data = json.load(thermodata)
+                upd.setTemp = data['set_temp']
+                upd.setProg = data['set_prog']
+                print(data)
+        except Exception as e:
+            print(e)
 
 
-# ---------------------------------------
-# ---------------- MQTT -----------------
-# ---------------------------------------
 
-publishToMQTT(Tdata,"brtt6/temp")
+        # ---------------------------------------
+        # ---------------- MQTT -----------------
+        # ---------------------------------------
+
+        publishToMQTT(Tdata,"brtt6/temp")
+
+def returnDHT22Data():
+    return readDHT22Data()
+
+returnDHT22Data()

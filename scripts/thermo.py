@@ -36,7 +36,8 @@ from threading import Event, Thread
 # x MQTT sync [done]
 # x refresh [done]
 # x relay [done]
-# - final wiring
+# x final wiring
+# - final case
 # - web gui (connect to MQTT)
 # - partial screen refresh
 # ...

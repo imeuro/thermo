@@ -32,8 +32,10 @@ assetsdir = os.path.join(basedir, 'assets')
 
 def PrintGUI(caller):
 
-    from thermo_read import returnData
-    d=returnData()
+    #from thermo_read import returnData
+    #d=returnData()
+    from thermo_temp_write import returnDHT22Data
+    d=returnDHT22Data()
 
     epd = rpi_epd2in7.EPD()
     epd.init()
@@ -84,7 +86,6 @@ def PrintGUI(caller):
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
         Himage.paste(fire, ((epd.width - 16 - 10), 40))
-
 
         # ---------------------------------- -----
 
@@ -342,8 +343,10 @@ def manageHeater():
         #GPIO.setmode(GPIO.BOARD)
         GPIO.setup(in1, GPIO.OUT)
 
-        from thermo_read import returnData
-        d=returnData()
+        #from thermo_read import returnData
+        #d=returnData()
+        from thermo_temp_write import returnDHT22Data
+        d=returnDHT22Data()
 
         print('current temp: '+str(d.tempNow))
         print('desired temp:'+str(d.setTemp))
