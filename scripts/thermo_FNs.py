@@ -161,9 +161,9 @@ def cycleModes():
         print('Cyclemodes:')
         print(e)
 
-    publishToMQTT(data,"brtt6/thermo")
-
     PrintGUI('prog')
+    manageHeater()
+    publishToMQTT(data,"brtt6/thermo")
 
 def incTemp():
     try:
@@ -184,9 +184,9 @@ def incTemp():
         print('incTemp:')
         print(e)
 
-    publishToMQTT(data,"brtt6/thermo")
-
     PrintGUI('prog')
+    manageHeater()
+    publishToMQTT(data,"brtt6/thermo")
 
 def decTemp():
     try:
@@ -207,9 +207,9 @@ def decTemp():
         print('decTemp')
         print(e)
  
-    publishToMQTT(data,"brtt6/thermo")
-
     PrintGUI('prog')
+    manageHeater()
+    publishToMQTT(data,"brtt6/thermo")
    
 def setAuto():
     try:
@@ -225,10 +225,9 @@ def setAuto():
         print('setAuto:')
         print(e)
 
-    publishToMQTT(data,"brtt6/thermo")
-
     PrintGUI('prog')
-
+    manageHeater()
+    publishToMQTT(data,"brtt6/thermo")
 
 # --------------------------------------- #
 # ---------- SYNC PROGRAMMING ----------- #
