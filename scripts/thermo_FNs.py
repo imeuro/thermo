@@ -281,19 +281,19 @@ def syncProgs():
         print(e)
    
 
-    # print('lastmod_mqtt: ')
-    # print(lastmod_mqtt)
-    # print('lastmod_json: ')
-    # print(lastmod_json)
+    print('lastmod_mqtt: ')
+    print(lastmod_mqtt)
+    print('lastmod_json: ')
+    print(lastmod_json)
 
     ### compare MQTT <-> JSON
     element = datetime.strptime(lastmod_mqtt,"%d-%m-%Y %H:%M")
     timestamp_mqtt = datetime.timestamp(element)
-    # print(timestamp_mqtt)
+    print(timestamp_mqtt)
 
     element = datetime.strptime(lastmod_json,"%d-%m-%Y %H:%M")
     timestamp_json = datetime.timestamp(element)
-    # print(timestamp_json)
+    print(timestamp_json)
 
     if timestamp_json < timestamp_mqtt:
         ### aggiorno json:
