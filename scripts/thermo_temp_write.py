@@ -76,4 +76,4 @@ class readDHT22Data:
 def returnDHT22Data():
     return readDHT22Data()
 
-returnDHT22Data()
+#returnDHT22Data()
