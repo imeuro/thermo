@@ -32,11 +32,10 @@ assetsdir = os.path.join(basedir, 'assets')
 
 def PrintGUI(caller):
 
+    #from thermo_read import returnData
+    #d=returnData()
     from thermo_temp_write import returnDHT22Data
-    if caller == 'main_repeatedly':
-        d=returnDHT22Data("full")
-    else:
-        d=returnDHT22Data("fast")
+    d=returnDHT22Data()
 
     epd = rpi_epd2in7.EPD()
     epd.init()
