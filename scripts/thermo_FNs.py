@@ -32,10 +32,11 @@ assetsdir = os.path.join(basedir, 'assets')
 
 def PrintGUI(caller):
 
-    #from thermo_read import returnData
-    #d=returnData()
     from thermo_temp_write import returnDHT22Data
-    d=returnDHT22Data()
+    if caller == 'main_repeatedly':
+        d=returnDHT22Data("full")
+    else:
+        d=returnDHT22Data("fast")
 
     epd = rpi_epd2in7.EPD()
     epd.init()
@@ -168,9 +169,9 @@ def cycleModes():
         print('Cyclemodes:')
         print(e)
 
-    PrintGUI('prog')
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
+    PrintGUI('prog')
 
 def incTemp():
     try:
@@ -191,9 +192,9 @@ def incTemp():
         print('incTemp:')
         print(e)
 
-    PrintGUI('prog')
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
+    PrintGUI('prog')
 
 def decTemp():
     try:
@@ -214,9 +215,9 @@ def decTemp():
         print('decTemp')
         print(e)
  
-    PrintGUI('prog')
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
+    PrintGUI('prog')
    
 def setAuto():
     try:
@@ -232,9 +233,9 @@ def setAuto():
         print('setAuto:')
         print(e)
 
-    PrintGUI('prog')
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
+    PrintGUI('prog')
 
 # --------------------------------------- #
 # ---------- SYNC PROGRAMMING ----------- #
