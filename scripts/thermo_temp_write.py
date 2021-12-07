@@ -67,8 +67,8 @@ class readDHT22Data():
             try:
                 with open(os.path.join(basedir, 'temp.json'), "r") as jsonFile:
                     data = json.load(thermodata)
-                    upd.cur_temp = data['cur_temp']
-                    upd.cur_humi = data['cur_humi']
+                    upd.tempNow = data['cur_temp']
+                    upd.humiNow = data['cur_humi']
                     print(data)
             except Exception as e:
                 print(e)
