@@ -57,6 +57,12 @@ class readDHT22Data():
             except Exception as e:
                 print(e)
 
+            # ---------------------------------------
+            # ---------------- MQTT -----------------
+            # ---------------------------------------
+    
+            publishToMQTT(Tdata,"brtt6/temp")
+
         else:
             try:
                 with open(os.path.join(basedir, 'temp.json'), "r") as jsonFile:
@@ -78,11 +84,6 @@ class readDHT22Data():
 
 
 
-        # ---------------------------------------
-        # ---------------- MQTT -----------------
-        # ---------------------------------------
-
-        publishToMQTT(Tdata,"brtt6/temp")
 
 def returnDHT22Data(mode):
     return readDHT22Data(mode)
