@@ -22,7 +22,7 @@ from thermo_FNs import *
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-class readDHT22Data(mode):
+class readDHT22Data():
     def __init__(upd):
         if mode == "full":
             DHT_SENSOR = Adafruit_DHT.DHT22
