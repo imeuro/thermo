@@ -11,18 +11,19 @@ if os.path.exists(libdir):
     sys.path.append(libdir)
 
 tempNow = ''
+humiNow = ''
 setTemp = ''
 setProg = ''
 
-from waveshare_epd import rpi_epd2in7
 
 import time
 from time import localtime, strftime
 os.environ['TZ'] = 'Europe/Rome'
 time.tzset()
 
+from waveshare_epd import rpi_epd2in7
 from PIL import Image,ImageDraw,ImageFont
-import traceback
+import traceback # ?
 
 from gpiozero import Button
 import board
@@ -43,10 +44,20 @@ from threading import Event, Thread
 # ...
 
 
+### INIT
+syncProgs()
+time.sleep(5)
+
+manageHeater()
+time.sleep(5)
+
 PrintGUI('main')
-call_repeatedly(600,PrintGUI,'main_repeatedly')
+
+
+### LOOP
 call_repeatedly(300, manageHeater)
-call_repeatedly(60, syncProgs)
+call_repeatedly(300, syncProgs)
+call_repeatedly(3600,PrintGUI,'main_repeatedly')
 
 
 btn1 = Button(5)    # cycleModes: auto/t2/t3/man

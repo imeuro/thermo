@@ -18,10 +18,6 @@ from PIL import Image,ImageDraw,ImageFont
 
 import paho.mqtt.client as mqtt
 
-global tempNow
-global setTemp
-global setProg
-
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 assetsdir = os.path.join(basedir, 'assets')
 
@@ -32,10 +28,7 @@ assetsdir = os.path.join(basedir, 'assets')
 
 def PrintGUI(caller):
 
-    #from thermo_read import returnData
-    #d=returnData()
-    from thermo_temp_write import returnDHT22Data
-    d=returnDHT22Data()
+    d=returnJSONData('full')
 
     epd = rpi_epd2in7.EPD()
     epd.init()
@@ -53,8 +46,8 @@ def PrintGUI(caller):
     timenow = strftime("%H:%M", localtime())
     timeW,timeH = fontM.getsize(timenow)
     timeX = (epd.width) - timeW - 5
-    bigtemp = str(d.tempNow).split('.')[0]
-    bighumi = str(d.humiNow).split('.')[0]
+    bigtemp = str(d.curTemp).split('.')[0]
+    bighumi = str(d.curHumi).split('.')[0]
 
     tempW,tempH = fontTempInt.getsize(bigtemp)
     tempoffset = 5+tempW
@@ -75,13 +68,13 @@ def PrintGUI(caller):
 
         draw.rectangle((0, 30, epd.width, 242), fill= 0)
         draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
-        draw.text((5, 50), str(d.tempNow).split('.')[0], font = fontTempInt, fill = 1)
+        draw.text((5, 50), str(d.curTemp).split('.')[0], font = fontTempInt, fill = 1)
         draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
         draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
-        draw.text((tempoffset, 85),'.'+ str(d.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+        draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
 
         draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 155), str(d.humiNow), font = fontTempDec, fill = 1)
+        draw.text((5, 155), str(d.curHumi), font = fontTempDec, fill = 1)
         draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
@@ -106,10 +99,10 @@ def PrintGUI(caller):
     #     print('[GUI] refresh temp...')
     #     #epd.init()
     #     draw.rectangle((0, 45, epd.width, 80), fill= 0)
-    #     draw.text((5, 45), str(t.tempNow).split('.')[0], font = fontTempInt, fill = 1)
+    #     draw.text((5, 45), str(t.curTemp).split('.')[0], font = fontTempInt, fill = 1)
     #     draw.text((tempoffset, 58), 'o', font = fontXS, fill = 1)
     #     draw.text((tempoffset+10, 58), 'C', font = fontTempUnit, fill = 1)
-    #     draw.text((tempoffset, 80),'.'+ str(t.tempNow).split('.')[1], font = fontTempDec, fill = 1)
+    #     draw.text((tempoffset, 80),'.'+ str(t.curTemp).split('.')[1], font = fontTempDec, fill = 1)
     #     epd.display_partial_frame(Himage, 0, 45, 80, epd.width)
 
     # if caller == "prog":
@@ -174,19 +167,19 @@ def cycleModes():
 
 def incTemp():
     try:
-        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-            data = json.load(thermodata)
-            newT = data['set_temp']
-            newT = float(newT)
-            if newT < 30.5 :
-                newT += 0.5
-            data['set_temp'] = newT
-            data['set_prog'] = 'MAN'
-            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
-            print(data)
+        d=returnJSONData('thermo')
+        data = {}
+        newT = d.setTemp
+        if newT < 30.5 :
+            newT += 0.5
+        data['set_temp'] = newT
+        data['set_prog'] = 'MAN'
+        data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
+        print(data)
 
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
+
     except Exception as e:
         print('incTemp:')
         print(e)
@@ -197,19 +190,19 @@ def incTemp():
 
 def decTemp():
     try:
-        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-            data = json.load(thermodata)
-            newT = data['set_temp']
-            newT = float(newT)
-            if newT > 5 :
-                newT -= 0.5
-            data['set_temp'] = newT
-            data['set_prog'] = 'MAN'
-            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
-            print(data)
+        d=returnJSONData('thermo')
+        data = {}
+        newT = d.setTemp
+        if newT > 5 :
+            newT -= 0.5
+        data['set_temp'] = newT
+        data['set_prog'] = 'MAN'
+        data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
+        print(data)
 
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
+
     except Exception as e:
         print('decTemp')
         print(e)
@@ -220,11 +213,11 @@ def decTemp():
    
 def setAuto():
     try:
-        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-            data = json.load(thermodata)
-            data['set_prog'] = 'AUTO'
-            data['set_temp'] = 5
-            data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
+        d=returnJSONData('thermo')
+        data = {}
+        data['set_prog'] = 'AUTO'
+        data['set_temp'] = 5
+        data['last_mod'] = time.strftime("%d-%m-%Y %H:%M")
             
         with open(os.path.join(basedir, 'thermo.json'), "w") as jsonFile:
             json.dump(data, jsonFile, indent=4)
@@ -238,6 +231,7 @@ def setAuto():
 
 # --------------------------------------- #
 # ---------- SYNC PROGRAMMING ----------- #
+# ----------  JSON <-> MQTT   ----------- #
 # --------------------------------------- #
 
 # ogni tot leggi mqtt e vedi data['last_mod'].
@@ -247,7 +241,7 @@ lastmod_mqtt = ''
 data_json = ''
 lastmod_json = ''
 
-### MQTT
+### 
 def on_sync_connect(client, userdata, flags, rc):
     client.subscribe("brtt6/thermo")
 def on_sync_message(client, userdata, msg):
@@ -273,9 +267,9 @@ def syncProgs():
 
     ### JSON
     try:
-        with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-            data_json = json.load(thermodata)
-            lastmod_json = str(data_json['last_mod'])
+        d=returnJSONData('thermo')
+        lastmod_json = d.setLastMod
+
     except Exception as e:
         print('syncProgs/read json:')
         print(e)
@@ -344,15 +338,12 @@ def manageHeater():
         #GPIO.setmode(GPIO.BOARD)
         GPIO.setup(in1, GPIO.OUT)
 
-        #from thermo_read import returnData
-        #d=returnData()
-        from thermo_temp_write import returnDHT22Data
-        d=returnDHT22Data()
+        d=returnJSONData('full')
 
-        print('current temp: '+str(d.tempNow))
+        print('current temp: '+str(d.curTemp))
         print('desired temp:'+str(d.setTemp))
 
-        if (d.tempNow < d.setTemp):
+        if (d.curTemp < d.setTemp):
             #print('better switch heating on.')
             GPIO.output(in1, False)
             # todo: make "fire" icon appear in gui
@@ -377,6 +368,39 @@ def call_repeatedly(interval, func, *args):
             func(*args)
     Thread(target=loop).start()    
     return stopped.set
+
+class readJSON:
+    def __init__(upd,mode):
+        if mode != 'thermo':
+            try:
+                with open(os.path.join(basedir, 'temp.json'), 'r') as tempdata:
+                    data = json.load(tempdata)
+                    upd.curTemp = data['cur_temp']
+                    upd.curHumi = data['cur_humi']
+                    upd.tempLastMod = data['last_mod']
+                    print('temp.json: ')
+                    print(data)
+            except Exception as e:
+                print(e)
+
+        if mode != 'temp':
+            try:
+                with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
+                    data = json.load(thermodata)
+                    upd.setTemp = data['set_temp']
+                    upd.setProg = data['set_prog']
+                    upd.setLastMod = data['last_mod']
+                    print('thermo.json: ')
+                    print(data)
+            except Exception as e:
+                print(e)
+
+def returnJSONData(mode):
+    return readJSON(mode)
+
+# test:
+# d=returnJSONData('full')
+# print(vars(d))
 
 
 def publishToMQTT(what,where):

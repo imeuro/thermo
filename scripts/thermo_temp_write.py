@@ -1,4 +1,5 @@
-# this reads bmp280 sensor data and publish it to a json file and an mqtt chan
+# cron every 5 mins:
+# read bmp280 sensor data and write to a json file
 
 import sys
 import os
@@ -22,58 +23,42 @@ from thermo_FNs import *
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-class readDHT22Data:
-    def __init__(upd):
-        DHT_SENSOR = Adafruit_DHT.DHT22
-        DHT_PIN = 4
 
-        calibration = -1.5
-        #calibration = 0
+DHT_SENSOR = Adafruit_DHT.DHT22
+DHT_PIN = 4
 
-        humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
-        upd.tempNow = round(temperature + calibration, 1)
-        upd.humiNow = round(humidity)
+calibration = -1.5
+#calibration = 0
 
-        print("\nTemperature: %0.1f C" % upd.tempNow)
-        print("\nHumidity: %0.1f " % upd.humiNow +"%")
+humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
+upd.tempNow = round(temperature + calibration, 1)
+upd.humiNow = round(humidity)
 
-        time.sleep(3)
+print("\nTemperature: %0.1f C" % upd.tempNow)
+print("\nHumidity: %0.1f " % upd.humiNow +"%")
 
-        # ---------------------------------------
-        # ---------------- JSON -----------------
-        # ---------------------------------------
+time.sleep(3)
 
-        Tdata = {
-            "cur_temp": upd.tempNow, 
-            "cur_humi": upd.humiNow, 
-            "last_mod": time.strftime("%d-%m-%Y %H:%M")
-        }
-        try:
-            with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
-                json.dump(Tdata, jsonFile, indent=4)
+# ---------------------------------------
+# ---------------- JSON -----------------
+# ---------------------------------------
 
-            time.sleep(3)
-        except Exception as e:
-            print(e)
+Tdata = {
+    "cur_temp": upd.tempNow, 
+    "cur_humi": upd.humiNow, 
+    "last_mod": time.strftime("%d-%m-%Y %H:%M")
+}
+try:
+    with open(os.path.join(basedir, 'temp.json'), "w") as jsonFile:
+        json.dump(Tdata, jsonFile, indent=4)
 
-        try:
-            with open(os.path.join(basedir, 'thermo.json'), 'r') as thermodata:
-                data = json.load(thermodata)
-                upd.setTemp = data['set_temp']
-                upd.setProg = data['set_prog']
-                print(data)
-        except Exception as e:
-            print(e)
+    time.sleep(3)
+except Exception as e:
+    print(e)
 
 
+# ---------------------------------------
+# ---------------- MQTT -----------------
+# ---------------------------------------
 
-        # ---------------------------------------
-        # ---------------- MQTT -----------------
-        # ---------------------------------------
-
-        publishToMQTT(Tdata,"brtt6/temp")
-
-def returnDHT22Data():
-    return readDHT22Data()
-
-#returnDHT22Data()
+publishToMQTT(Tdata,"brtt6/temp")
