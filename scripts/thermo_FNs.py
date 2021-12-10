@@ -269,6 +269,7 @@ def syncProgs():
     try:
         d=returnJSONData('thermo')
         lastmod_json = d.setLastMod
+        print(d)
 
     except Exception as e:
         print('syncProgs/read json:')
