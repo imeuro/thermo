@@ -269,7 +269,7 @@ def syncProgs():
     try:
         d=returnJSONData('thermo')
         lastmod_json = d.setLastMod
-        print(d)
+        print(vars(d))
 
     except Exception as e:
         print('syncProgs/read json:')
@@ -311,8 +311,8 @@ def syncProgs():
     elif timestamp_json > timestamp_mqtt :
         ### aggiorno mqtt
         newMQTTdata = {
-            "set_prog": d.set_prog,
-            "set_temp": d.set_temp, 
+            "set_prog": d.setProg,
+            "set_temp": d.setTemp, 
             "last_mod": lastmod_json
         }
         client = mqtt.Client()
