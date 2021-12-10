@@ -378,7 +378,7 @@ import socket
 def is_connected():
     try:
         # connect to the host -- tells us if the host is actually reachable
-        socket.create_connection(("meuro.dev", 53))
+        socket.create_connection(("meuro.dev", 1883))
         return True
     except OSError:
         pass
