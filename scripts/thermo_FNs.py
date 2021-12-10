@@ -310,8 +310,8 @@ def syncProgs():
     elif timestamp_json > timestamp_mqtt :
         ### aggiorno mqtt
         newMQTTdata = {
-            "set_prog": data_json['set_prog'],
-            "set_temp": data_json['set_temp'], 
+            "set_prog": d.set_prog,
+            "set_temp": d.set_temp, 
             "last_mod": lastmod_json
         }
         client = mqtt.Client()
