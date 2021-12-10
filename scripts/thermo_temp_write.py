@@ -34,8 +34,8 @@ humidity, temperature = Adafruit_DHT.read_retry(DHT_SENSOR, DHT_PIN)
 tempNow = round(temperature + calibration, 1)
 humiNow = round(humidity)
 
-print("\nTemperature: %0.1f C" % upd.tempNow)
-print("\nHumidity: %0.1f " % upd.humiNow +"%")
+print("\nTemperature: %0.1f C" % tempNow)
+print("\nHumidity: %0.1f " % humiNow +"%")
 
 time.sleep(3)
 
