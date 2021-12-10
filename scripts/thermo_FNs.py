@@ -259,6 +259,10 @@ def syncProgs():
     global data_json
     global lastmod_json
 
+    if is_connected() == False:
+        time.sleep(2)
+        break
+
     client = mqtt.Client()
     client.on_connect = on_sync_connect
     client.on_message = on_sync_message
@@ -413,3 +417,14 @@ def publishToMQTT(what,where):
     infotd.wait_for_publish()
     time.sleep(1)
     client.disconnect()
+
+
+import socket
+def is_connected():
+    try:
+        # connect to the host -- tells us if the host is actually reachable
+        socket.create_connection(("meuro.dev", 53))
+        return True
+    except OSError:
+        pass
+    return False
