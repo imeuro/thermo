@@ -374,6 +374,16 @@ def call_repeatedly(interval, func, *args):
     Thread(target=loop).start()    
     return stopped.set
 
+import socket
+def is_connected():
+    try:
+        # connect to the host -- tells us if the host is actually reachable
+        socket.create_connection(("meuro.dev", 53))
+        return True
+    except OSError:
+        pass
+    return False
+    
 class readJSON:
     def __init__(upd,mode):
         if mode != 'thermo':
@@ -409,22 +419,12 @@ def returnJSONData(mode):
 
 
 def publishToMQTT(what,where):
-    time.sleep(3)
-    client = mqtt.Client()
-    client.connect("meuro.dev", 1883, 60)
-    client.loop_start()
-    infotd = client.publish(where, payload=json.dumps(what), qos=1, retain=True)
-    infotd.wait_for_publish()
-    time.sleep(1)
-    client.disconnect()
-
-
-import socket
-def is_connected():
-    try:
-        # connect to the host -- tells us if the host is actually reachable
-        socket.create_connection(("meuro.dev", 53))
-        return True
-    except OSError:
-        pass
-    return False
+    if is_connected() == True :
+        time.sleep(3)
+        client = mqtt.Client()
+        client.connect("meuro.dev", 1883, 60)
+        client.loop_start()
+        infotd = client.publish(where, payload=json.dumps(what), qos=1, retain=True)
+        infotd.wait_for_publish()
+        time.sleep(1)
+        client.disconnect()
