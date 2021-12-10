@@ -261,7 +261,7 @@ def syncProgs():
 
     if is_connected() == False:
         time.sleep(2)
-        break
+        return
 
     client = mqtt.Client()
     client.on_connect = on_sync_connect
@@ -383,7 +383,7 @@ def is_connected():
     except OSError:
         pass
     return False
-    
+
 class readJSON:
     def __init__(upd,mode):
         if mode != 'thermo':
