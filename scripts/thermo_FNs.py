@@ -95,11 +95,11 @@ def PrintGUI(caller):
 
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 def UpdateGUI(what):
     print('[GUI] updating '+what+'...')
-    epd.init()
+    #epd.init()
     if what=='time':    
         # TIME:
         datenow = strftime("%d %b %Y", localtime())
@@ -112,7 +112,7 @@ def UpdateGUI(what):
         #epd.smart_update(image)
         epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
 
-    elif what=='temp':
+    #elif what=='temp':
         #TEMP/HUMI
         d=returnJSONData('temp')
         bigtemp = str(d.curTemp).split('.')[0]
@@ -135,13 +135,15 @@ def UpdateGUI(what):
         epd.display_partial_frame(Himage, 0, 162, 33, epd.width, fast=True)
     
     elif what=='thermo':
-        #TEMP/HUMI
+        #TEMP/HUM
         d=returnJSONData('thermo')
 
-        draw.rectangle((45, 125, epd.width, 145), fill= 0)
+        draw.rectangle((45, 217, epd.width, 240), fill= 0)
         draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
-        epd.display_partial_frame(Himage, 45, 125, 20, epd.width)
+        epd.display_partial_frame(Himage, 45, 217, 23, epd.width-45, fast=True)
 
+    else:
+        pass
 
     print('[GUI] done')
     #epd.sleep()
