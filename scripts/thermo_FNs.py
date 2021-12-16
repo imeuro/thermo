@@ -43,20 +43,19 @@ timenow = strftime("%H:%M", localtime())
 timeW,timeH = fontM.getsize(timenow)
 timeX = (epd.width) - timeW - 5
 
-bigtemp = str(d.curTemp).split('.')[0]
-bighumi = str(d.curHumi).split('.')[0]
-tempW,tempH = fontTempInt.getsize(bigtemp)
-tempoffset = 5+tempW
-humiW,humiH = fontTempDec.getsize(bighumi)
-humioffset = 5+humiW
-
 Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
 draw = ImageDraw.Draw(Himage)
 
 def PrintGUI(caller):
-
+    
     d=returnJSONData('full')
 
+    bigtemp = str(d.curTemp).split('.')[0]
+    bighumi = str(d.curHumi).split('.')[0]
+    tempW,tempH = fontTempInt.getsize(bigtemp)
+    tempoffset = 5+tempW
+    humiW,humiH = fontTempDec.getsize(bighumi)
+    humioffset = 5+humiW
     if caller == 'main_repeatedly':
         print('----------------------> main_repeatedly')
     #if caller == 'main':
@@ -125,6 +124,15 @@ def PrintGUI(caller):
     epd.sleep()
 
 def UpdateGUI():
+
+    d=returnJSONData('full')
+
+    bigtemp = str(d.curTemp).split('.')[0]
+    bighumi = str(d.curHumi).split('.')[0]
+    tempW,tempH = fontTempInt.getsize(bigtemp)
+    tempoffset = 5+tempW
+    humiW,humiH = fontTempDec.getsize(bighumi)
+    humioffset = 5+humiW
 
     # TIME:
     draw.rectangle((0, 0, epd.width, 30), fill= 1)
