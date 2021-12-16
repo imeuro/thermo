@@ -58,7 +58,6 @@ def PrintGUI(caller):
     humioffset = 5+humiW
     if caller == 'main_repeatedly':
         print('----------------------> main_repeatedly')
-    #if caller == 'main':
     if caller != 'null':
         print('[GUI] init...')
         # screen size: 176wx264h
@@ -91,76 +90,61 @@ def PrintGUI(caller):
         draw.text((70, 244), '+ ', font = fontS, fill = 0)
         draw.text((133, 244), '- ', font = fontS, fill = 0)
 
-        #epd.display_frame(Himage)
-        epd.smart_update(Himage)
+        epd.display_frame(Himage)
+        #epd.smart_update(Himage)
 
-    # if caller == "temp":
-    #     t=returnData()
-    #     print('[GUI] refresh temp...')
-    #     #epd.init()
-    #     draw.rectangle((0, 45, epd.width, 80), fill= 0)
-    #     draw.text((5, 45), str(t.curTemp).split('.')[0], font = fontTempInt, fill = 1)
-    #     draw.text((tempoffset, 58), 'o', font = fontXS, fill = 1)
-    #     draw.text((tempoffset+10, 58), 'C', font = fontTempUnit, fill = 1)
-    #     draw.text((tempoffset, 80),'.'+ str(t.curTemp).split('.')[1], font = fontTempDec, fill = 1)
-    #     epd.display_partial_frame(Himage, 0, 45, 80, epd.width)
-
-    # if caller == "prog":
-    #     p=returnData()
-    #     #epd.init()
-    #     print('[GUI] refresh program...')
-    #     draw.rectangle((0, 125, epd.width, 145), fill= 0)
-    #     draw.text((5, 125), 'SET:', font = fontXS, fill = 1)
-    #     draw.text((45, 125), str(p.setTemp)+' - '+ str(p.setProg) + ')', font = fontXS, fill = 1)
-    #     epd.display_partial_frame(Himage, 0, 125, 20, epd.width)
-
-    #     draw.rectangle((0, 246, 45, epd.height), fill= 1)
-    #     draw.text((5, 246), p.setProg+' ', font = fontXS, fill = 0)
-    #     epd.display_partial_frame(Himage, 0, 246, 30, 45)
-    #     #epd.smart_update(Himage)
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
-def UpdateGUI():
-    print('[GUI] updating...')
+def UpdateGUI(what):
+    print('[GUI] updating '+what+'...')
 
-    datenow = strftime("%d %b %Y", localtime())
-    timenow = strftime("%H:%M", localtime())
-    timeW,timeH = fontM.getsize(timenow)
-    timeX = (epd.width) - timeW - 5
+    if what=='time':    
+        # TIME:
+        datenow = strftime("%d %b %Y", localtime())
+        timenow = strftime("%H:%M", localtime())
+        timeW,timeH = fontM.getsize(timenow)
+        timeX = (epd.width) - timeW - 5
+        draw.rectangle((0, 0, epd.width, 30), fill= 1)
+        draw.text((timeX, 4), timenow, font = fontM, fill = 0)
+        time.sleep(5)
+        #epd.smart_update(image)
+        epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
 
+    elif what=='temp':
+        #TEMP/HUMI
+        d=returnJSONData('temp')
+        bigtemp = str(d.curTemp).split('.')[0]
+        bighumi = str(d.curHumi).split('.')[0]
+        tempW,tempH = fontTempInt.getsize(bigtemp)
+        tempoffset = 5+tempW
+        humiW,humiH = fontTempDec.getsize(bighumi)
+        humioffset = 5+humiW
 
-    # TIME:
-    draw.rectangle((0, 0, epd.width, 30), fill= 1)
-    draw.text((timeX, 4), timenow, font = fontM, fill = 0)
-    time.sleep(5)
-    #epd.smart_update(image)
-    epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
+        draw.rectangle((0, 65, epd.width, 130), fill= 0)
+        draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
+        draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
+        draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
+        draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
+        epd.display_partial_frame(Himage, 0, 65, 65, epd.width, fast=True)
 
-    #TEMP/HUMI
-    d=returnJSONData('temp')
-    bigtemp = str(d.curTemp).split('.')[0]
-    bighumi = str(d.curHumi).split('.')[0]
-    tempW,tempH = fontTempInt.getsize(bigtemp)
-    tempoffset = 5+tempW
-    humiW,humiH = fontTempDec.getsize(bighumi)
-    humioffset = 5+humiW
+        draw.rectangle((0, 162, epd.width, 195), fill= 0)
+        draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
+        draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
+        epd.display_partial_frame(Himage, 0, 162, 33, epd.width, fast=True)
+    
+    elif what=='thermo':
+        #TEMP/HUMI
+        d=returnJSONData('thermo')
 
-    draw.rectangle((0, 65, epd.width, 130), fill= 0)
-    draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
-    draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
-    draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
-    draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
-    epd.display_partial_frame(Himage, 0, 65, 65, epd.width, fast=True)
+        draw.rectangle((45, 125, epd.width, 145), fill= 0)
+        draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
+        epd.display_partial_frame(Himage, 45, 125, 20, epd.width)
 
-    draw.rectangle((0, 162, epd.width, 195), fill= 0)
-    draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
-    draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
-    epd.display_partial_frame(Himage, 0, 162, 33, epd.width, fast=True)
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
 
 # --------------------------------------- #
@@ -203,7 +187,8 @@ def cycleModes():
 
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
-    PrintGUI('prog')
+    #PrintGUI('prog')
+    UpdateGUI('thermo')
 
 def incTemp():
     try:
@@ -226,7 +211,8 @@ def incTemp():
 
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
-    PrintGUI('prog')
+    #PrintGUI('prog')
+    UpdateGUI('thermo')
 
 def decTemp():
     try:
@@ -249,7 +235,8 @@ def decTemp():
  
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
-    PrintGUI('prog')
+    #PrintGUI('prog')
+    UpdateGUI('thermo')
    
 def setAuto():
     try:
@@ -267,7 +254,8 @@ def setAuto():
 
     manageHeater()
     publishToMQTT(data,"brtt6/thermo")
-    PrintGUI('prog')
+    #PrintGUI('prog')
+    UpdateGUI('thermo')
 
 # --------------------------------------- #
 # ---------- SYNC PROGRAMMING ----------- #
@@ -349,7 +337,8 @@ def syncProgs():
             print('syncProgs/write json:')
             print(e)
 
-        PrintGUI('prog')
+        #PrintGUI('prog')
+        UpdateGUI('thermo')
         manageHeater()
         
     elif timestamp_json > timestamp_mqtt :
