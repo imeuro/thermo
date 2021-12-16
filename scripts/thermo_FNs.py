@@ -120,7 +120,7 @@ def PrintGUI(caller):
     #     #epd.smart_update(Himage)
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 def UpdateGUI():
     print('[GUI] updating...')
@@ -154,7 +154,7 @@ def UpdateGUI():
     # epd.display_partial_frame(Himage, 0, 155, 25, epd.width, fast=True)
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 
 # --------------------------------------- #
