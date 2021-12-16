@@ -87,7 +87,7 @@ def PrintGUI(caller):
         draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
 
         # ---------------------------------------
-        draw.text((5, 246), 'PROG ', font = fontXS, fill = 0)
+        draw.text((5, 247), 'PROG ', font = fontXS, fill = 0)
         draw.text((70, 244), '+ ', font = fontS, fill = 0)
         draw.text((133, 244), '- ', font = fontS, fill = 0)
 
@@ -134,7 +134,7 @@ def UpdateGUI():
     # TIME:
     draw.rectangle((0, 0, epd.width, 30), fill= 1)
     draw.text((timeX, 4), timenow, font = fontM, fill = 0)
-    time.sleep(2)
+    time.sleep(5)
     #epd.smart_update(image)
     epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
 
@@ -147,17 +147,17 @@ def UpdateGUI():
     humiW,humiH = fontTempDec.getsize(bighumi)
     humioffset = 5+humiW
 
-    draw.rectangle((0, 50, epd.width, 80), fill= 0)
+    draw.rectangle((0, 60, epd.width, 80), fill= 1)
     draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
     draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
     draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
     draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
-    epd.display_partial_frame(Himage, 0, 50, 80, epd.width, fast=True)
+    epd.display_partial_frame(Himage, 0, 60, 30, epd.width, fast=True)
 
-    draw.rectangle((0, 155, epd.width, 180), fill= 0)
+    draw.rectangle((0, 160, epd.width, 190), fill= 1)
     draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
     draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
-    epd.display_partial_frame(Himage, 0, 155, 35, epd.width, fast=True)
+    epd.display_partial_frame(Himage, 0, 160, 30, epd.width, fast=True)
 
     print('[GUI] done')
     #epd.sleep()
