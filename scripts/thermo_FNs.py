@@ -126,14 +126,14 @@ def PrintGUI(caller):
 def updateTime():
     while True:
         fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
-        timenow = strftime("%H:%M:%S", localtime())
+        timenow = strftime("%H:%M", localtime())
         timeW,timeH = fontM.getsize(timenow)
         timeX = (epd.width) - timeW - 5
         draw.rectangle((0, 0, epd.width, 30), fill= 1)
         draw.text((timeX, 4), timenow, font = fontM, fill = 0)
         #epd.smart_update(image)
-        epd.display_partial_frame(Himage, 0, 0, 30, epd.width, fast=False)
-        time.sleep(5)
+        epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
+        time.sleep(60)
 
 # --------------------------------------- #
 # ------------- BUTTONS ----------------- #
