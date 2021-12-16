@@ -126,6 +126,8 @@ def PrintGUI(caller):
 def updateTime():
     epd = rpi_epd2in7.EPD()
     epd.init()
+    Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
+    draw = ImageDraw.Draw(Himage)
     while True:
         fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
         timenow = strftime("%H:%M:%S", localtime())
