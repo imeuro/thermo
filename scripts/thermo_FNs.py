@@ -126,6 +126,11 @@ def UpdateGUI():
     print('[GUI] updating...')
     d=returnJSONData('full')
 
+    datenow = strftime("%d %b %Y", localtime())
+    timenow = strftime("%H:%M", localtime())
+    timeW,timeH = fontM.getsize(timenow)
+    timeX = (epd.width) - timeW - 5
+    
     bigtemp = str(d.curTemp).split('.')[0]
     bighumi = str(d.curHumi).split('.')[0]
     tempW,tempH = fontTempInt.getsize(bigtemp)
