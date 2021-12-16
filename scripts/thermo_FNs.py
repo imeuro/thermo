@@ -26,12 +26,14 @@ assetsdir = os.path.join(basedir, 'assets')
 # ---------------- GUI ------------------ #
 # --------------------------------------- #
 
+epd = rpi_epd2in7.EPD()
+epd.init()
+Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
+draw = ImageDraw.Draw(Himage)
+
 def PrintGUI(caller):
 
     d=returnJSONData('full')
-
-    epd = rpi_epd2in7.EPD()
-    epd.init()
 
     fontXS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 11)
     fontS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 16)
@@ -54,8 +56,6 @@ def PrintGUI(caller):
     humiW,humiH = fontTempDec.getsize(bighumi)
     humioffset = 5+humiW
 
-    Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
-    draw = ImageDraw.Draw(Himage)
     if caller == 'main_repeatedly':
         print('----------------------> main_repeatedly')
     #if caller == 'main':
@@ -124,10 +124,6 @@ def PrintGUI(caller):
     epd.sleep()
 
 def updateTime():
-    epd = rpi_epd2in7.EPD()
-    epd.init()
-    Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
-    draw = ImageDraw.Draw(Himage)
     while True:
         fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
         timenow = strftime("%H:%M:%S", localtime())
@@ -135,9 +131,9 @@ def updateTime():
         timeX = (epd.width) - timeW - 5
         draw.rectangle((0, 0, epd.width, 30), fill= 1)
         draw.text((timeX, 4), timenow, font = fontM, fill = 0)
-        time.sleep(5)
         #epd.smart_update(image)
-        epd.display_partial_frame(image, 0, loc+20, 20, epd.width, fast=True)
+        epd.display_partial_frame(Himage, 0, 0, 30, epd.width, fast=False)
+        time.sleep(5)
 
 # --------------------------------------- #
 # ------------- BUTTONS ----------------- #
