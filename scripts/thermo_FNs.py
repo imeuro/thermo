@@ -26,6 +26,27 @@ assetsdir = os.path.join(basedir, 'assets')
 # ---------------- GUI ------------------ #
 # --------------------------------------- #
 
+fontXS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 11)
+fontS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 16)
+fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
+fontL = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 19)
+#fontXL = ImageFont.truetype(os.path.join(assetsdir, 'Rubik-Light.ttf'), 48)
+fontTempInt = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 72)
+fontTempUnit = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 19)
+fontTempDec = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 36)
+
+datenow = strftime("%d %b %Y", localtime())
+timenow = strftime("%H:%M", localtime())
+timeW,timeH = fontM.getsize(timenow)
+timeX = (epd.width) - timeW - 5
+
+bigtemp = str(d.curTemp).split('.')[0]
+bighumi = str(d.curHumi).split('.')[0]
+tempW,tempH = fontTempInt.getsize(bigtemp)
+tempoffset = 5+tempW
+humiW,humiH = fontTempDec.getsize(bighumi)
+humioffset = 5+humiW
+
 epd = rpi_epd2in7.EPD()
 epd.init()
 Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
@@ -34,27 +55,6 @@ draw = ImageDraw.Draw(Himage)
 def PrintGUI(caller):
 
     d=returnJSONData('full')
-
-    fontXS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 11)
-    fontS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 16)
-    fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
-    fontL = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 19)
-    #fontXL = ImageFont.truetype(os.path.join(assetsdir, 'Rubik-Light.ttf'), 48)
-    fontTempInt = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 72)
-    fontTempUnit = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 19)
-    fontTempDec = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 36)
-
-    datenow = strftime("%d %b %Y", localtime())
-    timenow = strftime("%H:%M", localtime())
-    timeW,timeH = fontM.getsize(timenow)
-    timeX = (epd.width) - timeW - 5
-    bigtemp = str(d.curTemp).split('.')[0]
-    bighumi = str(d.curHumi).split('.')[0]
-
-    tempW,tempH = fontTempInt.getsize(bigtemp)
-    tempoffset = 5+tempW
-    humiW,humiH = fontTempDec.getsize(bighumi)
-    humioffset = 5+humiW
 
     if caller == 'main_repeatedly':
         print('----------------------> main_repeatedly')
@@ -119,21 +119,34 @@ def PrintGUI(caller):
     #     epd.display_partial_frame(Himage, 0, 246, 30, 45)
     #     #epd.smart_update(Himage)
 
-    updateTime()
+    call_repeatedly(60, UpdateGUI)
     print('[GUI] done')
     epd.sleep()
 
-def updateTime():
-    while True:
-        fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
-        timenow = strftime("%H:%M", localtime())
-        timeW,timeH = fontM.getsize(timenow)
-        timeX = (epd.width) - timeW - 5
-        draw.rectangle((0, 0, epd.width, 30), fill= 1)
-        draw.text((timeX, 4), timenow, font = fontM, fill = 0)
-        #epd.smart_update(image)
-        epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
-        time.sleep(60)
+def UpdateGUI():
+
+    # TIME:
+    draw.rectangle((0, 0, epd.width, 30), fill= 1)
+    draw.text((timeX, 4), timenow, font = fontM, fill = 0)
+    #epd.smart_update(image)
+    epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
+
+    #TEMP/HUMI
+    d=returnJSONData('temp')
+    draw.rectangle((0, 50, epd.width, 80), fill= 0)
+    draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
+    draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
+    draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
+    draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
+    epd.display_partial_frame(Himage, 0, 50, 80, epd.width, fast=True)
+
+    draw.rectangle((0, 155, epd.width, 180), fill= 0)
+    draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
+    draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
+    epd.display_partial_frame(Himage, 0, 155, 25, epd.width, fast=True)
+
+    epd.sleep()
+
 
 # --------------------------------------- #
 # ------------- BUTTONS ----------------- #
