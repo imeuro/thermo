@@ -147,17 +147,17 @@ def UpdateGUI():
     humiW,humiH = fontTempDec.getsize(bighumi)
     humioffset = 5+humiW
 
-    draw.rectangle((0, 60, epd.width, 80), fill= 1)
+    draw.rectangle((0, 65, epd.width, 130), fill= 0)
     draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
     draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
     draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
     draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
-    epd.display_partial_frame(Himage, 0, 60, 30, epd.width, fast=True)
+    epd.display_partial_frame(Himage, 0, 65, 65, epd.width, fast=True)
 
-    draw.rectangle((0, 160, epd.width, 190), fill= 1)
+    draw.rectangle((0, 162, epd.width, 195), fill= 0)
     draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
     draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
-    epd.display_partial_frame(Himage, 0, 160, 30, epd.width, fast=True)
+    epd.display_partial_frame(Himage, 0, 162, 33, epd.width, fast=True)
 
     print('[GUI] done')
     #epd.sleep()

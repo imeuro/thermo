@@ -55,7 +55,7 @@ PrintGUI('main')
 
 
 ### LOOP
-call_repeatedly(60, UpdateGUI)
+call_repeatedly(30, UpdateGUI)
 call_repeatedly(300, manageHeater)
 call_repeatedly(300, syncProgs)
 call_repeatedly(3600,PrintGUI,'main_repeatedly')
