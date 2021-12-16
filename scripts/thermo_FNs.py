@@ -26,6 +26,9 @@ assetsdir = os.path.join(basedir, 'assets')
 # ---------------- GUI ------------------ #
 # --------------------------------------- #
 
+epd = rpi_epd2in7.EPD()
+epd.init()
+
 fontXS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 11)
 fontS = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 16)
 fontM = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 18)
@@ -47,8 +50,6 @@ tempoffset = 5+tempW
 humiW,humiH = fontTempDec.getsize(bighumi)
 humioffset = 5+humiW
 
-epd = rpi_epd2in7.EPD()
-epd.init()
 Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
 draw = ImageDraw.Draw(Himage)
 
