@@ -47,7 +47,7 @@ Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
 draw = ImageDraw.Draw(Himage)
 
 def PrintGUI(caller):
-
+    
     d=returnJSONData('full')
 
     bigtemp = str(d.curTemp).split('.')[0]
@@ -99,7 +99,7 @@ def PrintGUI(caller):
 
 def UpdateGUI(what):
     print('[GUI] updating '+what+'...')
-
+    epd.init()
     if what=='time':    
         # TIME:
         datenow = strftime("%d %b %Y", localtime())
@@ -144,7 +144,7 @@ def UpdateGUI(what):
 
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 
 # --------------------------------------- #
