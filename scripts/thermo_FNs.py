@@ -123,7 +123,7 @@ def PrintGUI(caller):
     epd.sleep()
 
 def UpdateGUI():
-
+    print('[GUI] updating...')
     d=returnJSONData('full')
 
     bigtemp = str(d.curTemp).split('.')[0]
@@ -153,6 +153,7 @@ def UpdateGUI():
     # draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
     # epd.display_partial_frame(Himage, 0, 155, 25, epd.width, fast=True)
 
+    print('[GUI] done')
     epd.sleep()
 
 
