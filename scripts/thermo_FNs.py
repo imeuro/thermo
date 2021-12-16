@@ -348,7 +348,7 @@ def manageHeater():
         print('current temp: '+str(d.curTemp))
         print('desired temp:'+str(d.setTemp))
 
-        sleep(2)
+        time.sleep(2)
         
         if (d.curTemp < d.setTemp):
             #print('better switch heating on.')
