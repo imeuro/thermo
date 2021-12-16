@@ -1,13 +1,18 @@
-from __future__ import print_function
-from waveshare_epd.rpi_epd2in7.epd import EPD
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
 import os
 import sys
 
 basedir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 assetsdir = os.path.join(basedir, 'assets')
+libdir = os.path.join(basedir, 'lib')
+if os.path.exists(libdir):
+    sys.path.append(libdir)
+
+from __future__ import print_function
+from waveshare_epd.rpi_epd2in7.epd import EPD
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+
 
 def main():
     print("initializing", end="")
