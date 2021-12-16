@@ -68,13 +68,13 @@ def PrintGUI(caller):
 
         draw.rectangle((0, 30, epd.width, 242), fill= 0)
         draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
-        draw.text((5, 50), str(d.curTemp).split('.')[0], font = fontTempInt, fill = 1)
+        draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
         draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
         draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
         draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
 
         draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 155), str(d.curHumi), font = fontTempDec, fill = 1)
+        draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
         draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
 
         fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
@@ -273,7 +273,7 @@ def syncProgs():
     try:
         d=returnJSONData('thermo')
         lastmod_json = d.setLastMod
-        print(vars(d))
+        #print(vars(d))
 
     except Exception as e:
         print('syncProgs/read json:')
