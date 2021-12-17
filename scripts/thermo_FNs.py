@@ -96,7 +96,7 @@ def PrintGUI(caller):
 
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 def UpdateGUI(what):
     print('[GUI] updating '+what+'...')
