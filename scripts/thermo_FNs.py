@@ -147,7 +147,7 @@ def UpdateGUI(what):
         pass
 
     print('[GUI] done')
-    epd.sleep()
+    #epd.sleep()
 
 
 # --------------------------------------- #
