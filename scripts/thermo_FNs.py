@@ -336,7 +336,7 @@ def syncProgs():
             print('syncProgs/write json:')
             print(e)
 
-        #PrintGUI('prog')
+        time.sleep(5)
         UpdateGUI('thermo')
         manageHeater()
         
