@@ -38,17 +38,17 @@ fontTempInt = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 72
 fontTempUnit = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 19)
 fontTempDec = ImageFont.truetype(os.path.join(assetsdir, 'retro_gaming.ttf'), 36)
 
-datenow = strftime("%d %b %Y", localtime())
-timenow = strftime("%H:%M", localtime())
-timeW,timeH = fontM.getsize(timenow)
-timeX = (epd.width) - timeW - 5
-
 Himage = Image.new('1', (epd.width, epd.height), 255)  # 255: clear the frame
 draw = ImageDraw.Draw(Himage)
 
-def PrintGUI(caller):
+def PrintGUI():
     
     d=returnJSONData('full')
+
+    datenow = strftime("%d %b %Y", localtime())
+    timenow = strftime("%H:%M", localtime())
+    timeW,timeH = fontM.getsize(timenow)
+    timeX = (epd.width) - timeW - 5
 
     bigtemp = str(d.curTemp).split('.')[0]
     bighumi = str(d.curHumi).split('.')[0]
@@ -56,44 +56,42 @@ def PrintGUI(caller):
     tempoffset = 5+tempW
     humiW,humiH = fontTempDec.getsize(bighumi)
     humioffset = 5+humiW
-    if caller == 'main_repeatedly':
-        print('----------------------> main_repeatedly')
-    if caller != 'null':
-        print('[GUI] init...')
-        # screen size: 176wx264h
-        draw.rectangle((0, 0, epd.width, 30), fill= 1)
-        draw.text((5, 9), datenow, font = fontXS, fill = 0)
-        draw.text((timeX, 4), timenow, font = fontM, fill = 0)
-        # ---------------------------------------
 
-        draw.rectangle((0, 30, epd.width, 242), fill= 0)
-        draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
-        draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
-        draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
-        draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
-        draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
+    print('----------------------> main_repeatedly')
 
-        draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
-        draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
-        draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
+    print('[GUI] init...')
+    # screen size: 176wx264h
+    draw.rectangle((0, 0, epd.width, 30), fill= 1)
+    draw.text((5, 9), datenow, font = fontXS, fill = 0)
+    draw.text((timeX, 4), timenow, font = fontM, fill = 0)
+    # ---------------------------------------
 
-        fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
-        Himage.paste(fire, ((epd.width - 16 - 10), 40))
+    draw.rectangle((0, 30, epd.width, 242), fill= 0)
+    draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
+    draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
+    draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
+    draw.text((tempoffset+10, 63), 'C', font = fontTempUnit, fill = 1)
+    draw.text((tempoffset, 85),'.'+ str(d.curTemp).split('.')[1], font = fontTempDec, fill = 1)
 
-        # ---------------------------------- -----
+    draw.text((5, 145), 'Humidity:', font = fontXS, fill = 1)
+    draw.text((5, 155), bighumi, font = fontTempDec, fill = 1)
+    draw.text((humioffset+10, 170), '%', font = fontTempUnit, fill = 1)
 
-        draw.line([5,215, 171,215], fill = 1)
-        draw.text((5, 220), 'SET:', font = fontXS, fill = 1)
-        draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
+    fire = Image.open(os.path.join(assetsdir, 'fire-solid-16.png'))
+    Himage.paste(fire, ((epd.width - 16 - 10), 40))
 
-        # ---------------------------------------
-        draw.text((5, 247), 'PROG ', font = fontXS, fill = 0)
-        draw.text((70, 244), '+ ', font = fontS, fill = 0)
-        draw.text((133, 244), '- ', font = fontS, fill = 0)
+    # ---------------------------------- -----
 
-        epd.display_frame(Himage)
-        #epd.smart_update(Himage)
+    draw.line([5,215, 171,215], fill = 1)
+    draw.text((5, 220), 'SET:', font = fontXS, fill = 1)
+    draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
 
+    # ---------------------------------------
+    draw.text((5, 247), 'PROG ', font = fontXS, fill = 0)
+    draw.text((70, 244), '+ ', font = fontS, fill = 0)
+    draw.text((133, 244), '- ', font = fontS, fill = 0)
+
+    epd.display_frame(Himage)
 
     print('[GUI] done')
     #epd.sleep()
@@ -108,12 +106,12 @@ def UpdateGUI(what):
         timeW,timeH = fontM.getsize(timenow)
         timeX = (epd.width) - timeW - 5
         draw.rectangle((0, 0, epd.width, 30), fill= 1)
+        draw.text((5, 9), datenow, font = fontXS, fill = 0)
         draw.text((timeX, 4), timenow, font = fontM, fill = 0)
         time.sleep(5)
         #epd.smart_update(image)
-        epd.display_partial_frame(Himage, timeX, 0, 30, epd.width, fast=True)
+        epd.display_partial_frame(Himage, 0, 0, 30, epd.width, fast=True)
 
-    #elif what=='temp':
         #TEMP/HUMI
         d=returnJSONData('temp')
         bigtemp = str(d.curTemp).split('.')[0]
@@ -141,7 +139,7 @@ def UpdateGUI(what):
 
         draw.rectangle((45, 217, epd.width, 240), fill= 0)
         draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
-        epd.display_partial_frame(Himage, 45, 217, 23, epd.width-45, fast=True)
+        epd.display_partial_frame(Himage, 45, 217, 23, epd.width-45, fast=False)
 
     else:
         pass

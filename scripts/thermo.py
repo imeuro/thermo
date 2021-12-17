@@ -53,7 +53,7 @@ time.sleep(5)
 manageHeater()
 time.sleep(5)
 
-PrintGUI('main')
+PrintGUI()
 
 
 ### LOOP
@@ -61,7 +61,7 @@ call_repeatedly(300, UpdateGUI,'time')
 call_repeatedly(300, UpdateGUI,'temp')
 call_repeatedly(300, manageHeater)
 call_repeatedly(300, syncProgs)
-call_repeatedly(3600,PrintGUI,'main_repeatedly')
+call_repeatedly(3600,PrintGUI)
 
 
 btn1 = Button(5)    # cycleModes: auto/t2/t3/man
