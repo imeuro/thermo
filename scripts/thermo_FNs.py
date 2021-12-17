@@ -61,6 +61,7 @@ def PrintGUI(caller):
     if caller != 'null':
         print('[GUI] init...')
         # screen size: 176wx264h
+        draw.rectangle((0, 0, epd.width, 30), fill= 1)
         draw.text((5, 9), datenow, font = fontXS, fill = 0)
         draw.text((timeX, 4), timenow, font = fontM, fill = 0)
         # ---------------------------------------
@@ -95,11 +96,11 @@ def PrintGUI(caller):
 
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
 def UpdateGUI(what):
     print('[GUI] updating '+what+'...')
-    #epd.init()
+    epd.init()
     if what=='time':    
         # TIME:
         datenow = strftime("%d %b %Y", localtime())
@@ -146,7 +147,7 @@ def UpdateGUI(what):
         pass
 
     print('[GUI] done')
-    #epd.sleep()
+    epd.sleep()
 
 
 # --------------------------------------- #

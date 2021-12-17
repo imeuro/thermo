@@ -38,9 +38,11 @@ from threading import Event, Thread
 # x refresh [done]
 # x relay [done]
 # x final wiring [done]
-# - final case
-# - web gui (connect to MQTT)
-# - partial screen refresh
+# x final case [ish..]
+# x web gui (connect to MQTT) [done]
+# x partial screen refresh [done]
+# - velocizzare cambio programma
+# - tolleranza temperatura +/- 0.5°c
 # ...
 
 
