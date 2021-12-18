@@ -448,11 +448,9 @@ def returnJSONData(mode):
 
 def publishToMQTT(what,where):
     if is_connected() == True :
-        time.sleep(3)
         client = mqtt.Client()
         client.connect("meuro.dev", 1883, 60)
         client.loop_start()
         infotd = client.publish(where, payload=json.dumps(what), qos=1, retain=True)
         infotd.wait_for_publish()
-        time.sleep(1)
         client.disconnect()
