@@ -67,6 +67,12 @@ def PrintGUI():
     # ---------------------------------------
 
     draw.rectangle((0, 30, epd.width, 242), fill= 0)
+    # perchè son tamarro
+    draw.rectangle((0, 31, 1, 1), fill= 1)
+    draw.rectangle((epd.width, 31, 1, 1), fill= 1)
+    draw.rectangle((0, 242, 1, 1), fill= 1)
+    
+    draw.rectangle((epd.width, 242, 1, 1), fill= 1)
     draw.text((5, 50), 'TEMP:', font = fontXS, fill = 1)
     draw.text((5, 50), bigtemp, font = fontTempInt, fill = 1)
     draw.text((tempoffset, 63), 'o', font = fontXS, fill = 1)
