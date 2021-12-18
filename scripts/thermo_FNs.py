@@ -139,7 +139,7 @@ def UpdateGUI(what):
 
         draw.rectangle((45, 217, epd.width, 240), fill= 0)
         draw.text((45, 217), str(d.setProg)+' - '+ str(d.setTemp), font = fontL, fill = 1)
-        epd.display_partial_frame(Himage, 45, 217, 23, epd.width-45, fast=False)
+        epd.display_partial_frame(Himage, 45, 217, 23, epd.width-45, fast=True)
 
     else:
         pass
